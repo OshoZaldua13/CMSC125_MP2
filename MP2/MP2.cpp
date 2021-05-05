@@ -8,6 +8,7 @@ using namespace std;
 class Class{ // wa ko kabaw unsa akong i-variable
 private:
     string inputFile;
+    int arrivalTime[50], burstTime[50], priority[50];
 
 public:
     Class();
@@ -25,9 +26,9 @@ int main(){
 }
 
 Class::Class(){ //constructor
-    // for(int i=0;i<100;i++)
-    //     inputFile[i] = ""; //set each index to a blank character para at least naa konoy sulod pero bisag wa gud
-    // inputFile[100] = "\0"; //para mabal-an nga its then end of the string na
+    for(int i=0;i<50;i++){
+        arrivalTime[i] = burstTime[i] = priority[i] = 0; //butangan nato tanan daan og zero para walay error
+    }
 }
 
 void Class::readFile(){
@@ -49,16 +50,30 @@ void Class::readFile(){
     char word[50]; //another character array para pagbasa sa each word sa file
     char wholeFile[100]; //ibutang diri tanan niyang na read
 
-    fs >> word; //input og isa ka word
+    //limaon nato kay para ditso ta sa mga processing time and stuff
+    fs >> word; 
+    fs >> word;
+    fs >> word;
+    fs >> word;
+    fs >> word;
+    fs >> word;
+    //lima btw kay lima man ka words ang na sa input niya ato to silang i-skip tanan
+
+    int i = 0; //index
 
     while(fs.good()){ //check niya if wala pa ba siya sa end sa file
-        cout << word << " "; //ato i-print para check sa if nigana ba
-        inputFile.append(word);
-        fs >> word; //input na pud og laing word
+        fs >> word; //dili lang nato apilon unsa nga process kay sunod naman daan, so pwede ra ang index ang atong gamiton
+        fs >> word; //input para sa arrival time
+        arrivalTime[i] = atoi(word); //ibutang sa arrival time array, gi-atoi kay char array man niya ang arrival time array kay int array
+        fs >> word; //input para sa burst time
+        burstTime[i] = atoi(word); //gibutang sa burst time array
+        fs >> word; //input para sa priority
+        priority[i] = atoi(word); //gibutang sa priority array
+        i++; //increment index duhhh
     }
 }
 
 void Class::printFile(){
-    for(int i=0;i<inputFile.length();i++)
-        cout << inputFile[i];
+    for(int i=0;i<20;i++)
+        cout << priority[i] << " ";
 }
