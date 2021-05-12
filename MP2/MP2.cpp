@@ -5,22 +5,28 @@
 
 using namespace std;
 
-class Class{ // wa ko kabaw unsa akong i-variable
+class Class{ // wa ko kabaw unsa akong i-class name
 private:
     string inputFile;
     int arrivalTime[50], burstTime[50], priority[50];
+    int numberOfProcesses;
 
 public:
     Class();
     void readFile();
     void printFile();
+    void setNumberOfProcesses();
+    void FCFS();
+    void performProcesses();
 };
 
 int main(){
     Class c; //get it? Class, c? naay Class c rn? char
 
     c.readFile(); //read og file duhh
-    c.printFile(); //print file duhhh
+    // c.printFile(); //print file duhhh
+
+    c.performProcesses();
 
     return 0;
 }
@@ -28,6 +34,7 @@ int main(){
 Class::Class(){ //constructor
     for(int i=0;i<50;i++){
         arrivalTime[i] = burstTime[i] = priority[i] = 0; //butangan nato tanan daan og zero para walay error
+        numberOfProcesses = 0;
     }
 }
 
@@ -70,10 +77,41 @@ void Class::readFile(){
         fs >> word; //input para sa priority
         priority[i] = atoi(word); //gibutang sa priority array
         i++; //increment index duhhh
+        numberOfProcesses++; //para makabaw ta pila kabuok processes
     }
 }
 
 void Class::printFile(){
-    for(int i=0;i<20;i++)
-        cout << priority[i] << " ";
+    cout << numberOfProcesses;
+}
+
+void Class::FCFS(){
+    int arr[50] = {0}; //new array para ibutang ang each waiting time sa each process
+
+    for(int i=0;i<numberOfProcesses;i++) //diri gibutang ang mga waiting time
+        for(int j=0;j<i;j++)
+            arr[i] = arr[i] + burstTime[j];
+
+    int arr1[50] = {0}; //para ni sa turnaround time sa each process
+
+    for(int i=0;i<numberOfProcesses;i++)
+        for(int j=0;j<i+1;j++) //diri gibutang ang mga turnaround time
+            arr1[i] = arr1[i] + burstTime[j];
+
+    float turnaroudTime = arr1[0]; //ang unang value sa turnaround array kay 0 ang iyang i-plus inig una mamali na nuon
+    float waitingTime = 0; //total waiting time na ni
+
+    for(int i=1;i<numberOfProcesses;i++){
+        waitingTime+=arr[i]; //gi add sa tanan
+        turnaroudTime+=arr1[i]; //gi add sa tanan
+    }
+    turnaroudTime/=numberOfProcesses; //averaging sa turnaround time
+    waitingTime/=numberOfProcesses; //averaging sa waitng time
+
+    cout << waitingTime << endl;
+    cout << turnaroudTime << endl;
+}
+
+void Class::performProcesses(){
+    FCFS();
 }
