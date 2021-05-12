@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <algorithm>
 
 using namespace std;
 
@@ -14,9 +15,10 @@ private:
 public:
     Class();
     void readFile();
-    void printFile();
+    void printFile(int[]);
     void setNumberOfProcesses();
     void FCFS();
+    void SJF();
     void performProcesses();
 };
 
@@ -81,8 +83,10 @@ void Class::readFile(){
     }
 }
 
-void Class::printFile(){
-    cout << numberOfProcesses;
+void Class::printFile(int arr[]){
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr[i] << " ";
+    cout << endl;
 }
 
 void Class::FCFS(){
@@ -112,6 +116,41 @@ void Class::FCFS(){
     cout << turnaroudTime << endl;
 }
 
+void Class::SJF(){
+    int arr[50] = {0}; //ibalhin nato ang burst time kay ato man ni i-sort and we dont want to change the input
+    
+    for(int i=0;i<numberOfProcesses;i++)
+        arr[i] = burstTime[i]; //transfered
+
+    sort(arr, arr+numberOfProcesses); //sort
+
+    //after sorting is the same ra sa FCFS
+    int arr1[50] = {0};
+    int arr2[50] = {0};
+
+    for(int i=0;i<numberOfProcesses;i++) //diri gibutang ang mga waiting time
+        for(int j=0;j<i;j++)
+            arr1[i] = arr1[i] + arr[j];
+
+    for(int i=0;i<numberOfProcesses;i++)
+        for(int j=0;j<i+1;j++) //diri gibutang ang mga turnaround time
+            arr2[i] = arr2[i] + arr[j];
+    
+    float turnaroudTime = arr2[0]; //ang unang value sa turnaround array kay 0 ang iyang i-plus inig una mamali na nuon
+    float waitingTime = 0; //total waiting time na ni
+
+    for(int i=1;i<numberOfProcesses;i++){
+        waitingTime+=arr1[i]; //gi add sa tanan
+        turnaroudTime+=arr2[i]; //gi add sa tanan
+    }
+    turnaroudTime/=numberOfProcesses; //averaging sa turnaround time
+    waitingTime/=numberOfProcesses; //averaging sa waitng time
+
+    cout << waitingTime << endl;
+    cout << turnaroudTime << endl;
+}
+
 void Class::performProcesses(){
     FCFS();
+    SJF();
 }
