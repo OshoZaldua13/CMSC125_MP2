@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdlib>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -19,6 +20,9 @@ public:
     void setNumberOfProcesses();
     void FCFS();
     void SJF();
+    void SRPT();
+    void Priority();
+    void RoundRobin();
     void performProcesses();
 };
 
@@ -150,7 +154,69 @@ void Class::SJF(){
     cout << turnaroudTime << endl;
 }
 
+void Class::SRPT(){
+    int overallTime = 0;
+    for(int i=0;i<numberOfProcesses+1;i++)
+        overallTime+=burstTime[i];
+
+    cout << overallTime;
+
+    int AT = 0;
+    while(AT<overallTime){
+        for(int i=0;i<numberOfProcesses;i++){
+            if(arrivalTime[i]<=AT){
+
+            }
+        }
+        AT++;
+    }
+}
+
+void Class::Priority(){
+    int arr[50] = {0};
+    int prio = 0;
+
+    for(int i=0;i<numberOfProcesses;){
+        for(int j=0;j<numberOfProcesses;j++){
+            if(priority[j]==prio){
+                arr[i] = burstTime[j];
+                i++;
+            }
+        }
+        prio++;
+    }
+
+    //after na sort ang mga priorities char kay same ra gihapon sa fcfs
+    int arr1[50] = {0};
+    int arr2[50] = {0};
+
+    for(int i=0;i<numberOfProcesses;i++) //diri gibutang ang mga waiting time
+        for(int j=0;j<i;j++)
+            arr1[i] = arr1[i] + arr[j];
+
+    for(int i=0;i<numberOfProcesses;i++)
+        for(int j=0;j<i+1;j++) //diri gibutang ang mga turnaround time
+            arr2[i] = arr2[i] + arr[j];
+    
+    float turnaroudTime = arr2[0]; //ang unang value sa turnaround array kay 0 ang iyang i-plus inig una mamali na nuon
+    float waitingTime = 0; //total waiting time na ni
+
+    for(int i=1;i<numberOfProcesses;i++){
+        waitingTime+=arr1[i]; //gi add sa tanan
+        turnaroudTime+=arr2[i]; //gi add sa tanan
+    }
+    turnaroudTime/=numberOfProcesses; //averaging sa turnaround time
+    waitingTime/=numberOfProcesses; //averaging sa waitng time
+
+    cout << waitingTime << endl;
+    cout << turnaroudTime << endl;
+    
+}
+
+void Class::RoundRobin(){
+
+}
+
 void Class::performProcesses(){
-    FCFS();
-    SJF();
+    Priority();
 }
