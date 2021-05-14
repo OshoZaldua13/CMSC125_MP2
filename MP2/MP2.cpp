@@ -24,6 +24,7 @@ public:
     void Priority();
     void RoundRobin();
     void performProcesses();
+    void printFormat();
 };
 
 int main(){
@@ -115,9 +116,17 @@ void Class::FCFS(){
     }
     turnaroudTime/=numberOfProcesses; //averaging sa turnaround time
     waitingTime/=numberOfProcesses; //averaging sa waitng time
+    //printing 
+    cout << "FCSC\n";
+    cout << "WAITING TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr[i] << " ";
+    cout << "\nTURN AROUND TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr1[i] << " ";
 
-    cout << waitingTime << endl;
-    cout << turnaroudTime << endl;
+    cout << "\nAVERAGE WAITING TIME: " << waitingTime << endl;
+    cout << "AVERAGE TURNAROUND TIME: " << turnaroudTime << endl << endl;
 }
 
 void Class::SJF(){
@@ -150,8 +159,16 @@ void Class::SJF(){
     turnaroudTime/=numberOfProcesses; //averaging sa turnaround time
     waitingTime/=numberOfProcesses; //averaging sa waitng time
 
-    cout << waitingTime << endl;
-    cout << turnaroudTime << endl;
+    //printing
+    cout << "SJF\n";
+    cout << "WAITING TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr1[i] << " ";
+    cout << "\nTURNAROUND TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr2[i] << " ";
+    cout << "\nAVERAGE WAITING TIME: " << waitingTime << endl;
+    cout << "AVERAGE TURNAROUND TIME: " << turnaroudTime << endl << endl;
 }
 
 void Class::SRPT(){
@@ -231,7 +248,6 @@ void Class::SRPT(){
     for(int i=0;i<numberOfProcesses;i++)
         waitingTime+=rawWaitingTime[i];
     waitingTime/=numberOfProcesses;
-    cout << waitingTime << endl;
 
     //then turnaround time dayun
     for(int i=0;i<numberOfProcesses;i++)
@@ -241,7 +257,17 @@ void Class::SRPT(){
     for(int i=0;i<numberOfProcesses;i++)
         turnaroundTime+=waitingIndex[i];
     turnaroundTime/=numberOfProcesses;
-    cout << turnaroundTime << endl;
+
+    //printing
+    cout << "SRPT\n";
+    cout << "WAITING TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << rawWaitingTime[i] << " ";
+    cout << "\nTURNAROUND TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << waitingIndex[i] << " ";
+    cout << "\nAVERAGE WAITING TIME: " << waitingTime << endl;
+    cout << "AVERAGE TURNAROUND TIME: " << turnaroundTime << endl << endl;
 }
     
 
@@ -281,8 +307,17 @@ void Class::Priority(){
     turnaroudTime/=numberOfProcesses; //averaging sa turnaround time
     waitingTime/=numberOfProcesses; //averaging sa waitng time
 
-    cout << waitingTime << endl;
-    cout << turnaroudTime << endl;
+    //printing 
+    cout << "PRIORITY\n";
+    cout << "WAITING TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr1[i] << " ";
+    cout << "\nTURN AROUND TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << arr2[i] << " ";
+
+    cout << "\nAVERAGE WAITING TIME: " << waitingTime << endl;
+    cout << "AVERAGE TURNAROUND TIME: " << turnaroudTime << endl << endl;
     
 }
 
@@ -346,7 +381,7 @@ void Class::RoundRobin(){
     for(int i=0;i<numberOfProcesses;i++)
         waitingTime+=waitingTimeProcess[i];
     waitingTime/=numberOfProcesses;
-    cout << waitingTime << endl; //yey baby it works
+   
 
     //okay turnaround time na pud mga langga
     for(int i=1;i<gi+1;i++)
@@ -364,9 +399,25 @@ void Class::RoundRobin(){
     for(int i=0;i<numberOfProcesses;i++)
         turnaroundTime+=turaroundTimeProcess[i];
     turnaroundTime/=numberOfProcesses;
-    cout << turnaroundTime << endl; //hay salamat mana jud ang round roben
+    cout << "ROUND-ROBIN\n";
+    cout << "WAITING TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << waitingTimeProcess[i] << " ";
+    cout << "\nTURNAROUND TIME: ";
+    for(int i=0;i<numberOfProcesses;i++)
+        cout << turaroundTimeProcess[i] << " ";
+    cout << "\nAVERAGE WAITING TIME: " << waitingTime; //yey baby it works
+    cout << "\nAVERAGE TURNAROUND TIME: " <<turnaroundTime << endl; //hay salamat mana jud ang round roben
 }
 
 void Class::performProcesses(){
+    FCFS();
+    SJF();
     SRPT();
+    Priority();
+    RoundRobin();
+}
+
+void Class::printFormat(){
+    cout << "PROCESS        WAITING TIME        TURNAROUND TIME\n";
 }
