@@ -214,9 +214,86 @@ void Class::Priority(){
 }
 
 void Class::RoundRobin(){
+    int arr[100][2]; // new array para sa gantt chart
+    int ganttChart[100][2]; //jk kani ang gantt chart nga tinuod kato sa taas kay part ra sa paghimo og gantt chart
+    for(int i=0;i<100;i++)
+        for(int j=0;j<2;j++)
+            arr[i][j] = ganttChart[i][j] = 0;
 
+    int arr1[50]={0}; //ato icopy ang burst time diri kay ato mang hilabtan
+    for(int i=0;i<numberOfProcesses;i++) 
+        arr1[i] = burstTime[i];
+
+    int zero = 1; //ilhanan if nahuman na ba
+    int gi = 0; //gantt chart index
+    for(int i=0;zero!=0;i++){
+        zero = 0; //balik zero para matarong og plus
+        int quantum = 4;
+        int j = i%20; //ang index 
+        if(arr1[j]-quantum<0) //inig minus kay zero na gali katong remainder ang iminus para zero ra ang differnece
+            quantum = arr1[j]%quantum;
+
+        if(arr1[j]!=0){ 
+            arr[gi][0] = quantum; //gantt chart-ish is here bb
+            arr[gi][1] = j;
+            gi++;
+        }
+        for(int k=0;k<numberOfProcesses;k++) //gi check if na zero na ba tanan
+            zero+=arr1[k];
+        arr1[j]-=quantum; // diri ang pagminus
+    } 
+
+    //diri gihimo ang gantt chart base sa mga time nga nagamit nila sa quantum
+    for(int i=0;i<gi+1;i++){
+        for(int j=0;j<i;j++)
+            ganttChart[i][0]+=arr[j][0];
+        ganttChart[i][1] = arr[i][1];
+    }
+
+    //mana man og initialize ang gantt chart diri nga part is kuhaaun na nato ang waiting time ug turnaround time sa each process
+    //first is pangitaon nako ang time nga i-minus sa waiting time which is ang time nga nag process sila pero wala nahuman
+    int minusWaitingTime[50] = {0};
+    int flag[50] = {0};
+    for(int i=0;i<gi;i++){
+        minusWaitingTime[arr[i][1]]+=arr[i][0];
+        flag[arr[i][1]] = i; //para makabaw ta unsa ato iminus later kay maapil man og add ang something idk how to describe it
+    }
+
+    //pero naapil man nila og add ang waiting time sa last so kailangan nato i-minus para masakto
+    for(int i=0;i<numberOfProcesses;i++)
+        minusWaitingTime[i]-=arr[flag[i]][0];
+
+    //naa naman nako ang i-minus sa waiting time ako rang kuhaun ang waiting time sa isa ka process then i-minus ra ez;
+    int waitingTimeProcess[50] = {0};
+    for(int i=0;i<numberOfProcesses;i++)
+        waitingTimeProcess[i] = ganttChart[flag[i]][0] - minusWaitingTime[i];
+
+    //so after ana i add ra nako tanan then i-average orayt ez pz im so happy hihihi
+    float waitingTime = 0;
+    for(int i=0;i<numberOfProcesses;i++)
+        waitingTime+=waitingTimeProcess[i];
+    waitingTime/=numberOfProcesses;
+    cout << waitingTime << endl; //yey baby it works
+
+    //okay turnaround time na pud mga langga
+    for(int i=1;i<gi+1;i++)
+        ganttChart[i-1][0] = ganttChart[i][0]; //updated the gantt chart para ang turnaround time na ang sulod
+
+    for(int i=0;i<gi;i++)
+        flag[ganttChart[i][1]] = i; //updated ang flag kung asa ang mga index sa turnaround time
+    
+    int turaroundTimeProcess[50] = {0};
+    for(int i=0;i<numberOfProcesses;i++)
+        turaroundTimeProcess[i] = ganttChart[flag[i]][0]; //kani mao nani ang turnaround times 
+
+    //i-plus na lang tanan then i-average then mana  huhu very happy
+    float turnaroundTime = 0;
+    for(int i=0;i<numberOfProcesses;i++)
+        turnaroundTime+=turaroundTimeProcess[i];
+    turnaroundTime/=numberOfProcesses;
+    cout << turnaroundTime << endl; //hay salamat mana jud ang round roben
 }
 
 void Class::performProcesses(){
-    Priority();
+    RoundRobin();
 }
