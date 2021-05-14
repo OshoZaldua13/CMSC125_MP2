@@ -203,9 +203,45 @@ void Class::SRPT(){
         gi++;
         arr1[shortest[0][1]]--;
     }
+
+    int waitingIndex[50] = {0};
+    int minusWaitingTime[50] = {0};
+    int rawWaitingTime[50] = {0};
+
+    for(int i=0;i<gi;i++){
+        waitingIndex[tempGanttChart[i][1]] = i; //turnaround time diay ni accidentally mao ang nigawas #lucky
+    }
+
+    //gikan sa turnaround time magsige ko og minus hantod maabot ko sa waiting time
+    for(int i=0;i<numberOfProcesses;i++)
+        for(int j=waitingIndex[i];tempGanttChart[j][1]==tempGanttChart[waitingIndex[i]][1];j--)
+            rawWaitingTime[i] = j;
+    
+    //after ana is pangitaon ang time nga nag process ang isa ka process kay dili man siya counted as waiting time cause hes not waiting bro
     for(int i=0;i<gi;i++)
-        cout << tempGanttChart[i][1] << " ";
-    cout << endl;
+        if(i<rawWaitingTime[tempGanttChart[i][1]])
+            minusWaitingTime[tempGanttChart[i][1]]++;
+
+    //after that is i minus ang raw waiting time sa katong na process-ish ug sa arrival time
+    for(int i=0;i<numberOfProcesses;i++)
+        rawWaitingTime[i] = rawWaitingTime[i] - arrivalTime[i] - minusWaitingTime[i];
+
+    //then after ana i-average para makuha ang average dadoi
+    float waitingTime = 0;
+    for(int i=0;i<numberOfProcesses;i++)
+        waitingTime+=rawWaitingTime[i];
+    waitingTime/=numberOfProcesses;
+    cout << waitingTime << endl;
+
+    //then turnaround time dayun
+    for(int i=0;i<numberOfProcesses;i++)
+        waitingIndex[i]++; //ato i-update kay index man naa diri plus 1 ra para kato jung position ang makuha
+
+    float turnaroundTime = 0;
+    for(int i=0;i<numberOfProcesses;i++)
+        turnaroundTime+=waitingIndex[i];
+    turnaroundTime/=numberOfProcesses;
+    cout << turnaroundTime << endl;
 }
     
 
