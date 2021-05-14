@@ -155,22 +155,59 @@ void Class::SJF(){
 }
 
 void Class::SRPT(){
-    int overallTime = 0;
-    for(int i=0;i<numberOfProcesses+1;i++)
-        overallTime+=burstTime[i];
+    int arr[100][2], ganttChart[100][2];
+    int arr1[50];
+    int totalTime = 0;
+    for(int i=0;i<100;i++)
+        for(int j=0;j<2;j++)
+            arr[i][j] = ganttChart[i][j] = 0;
 
-    cout << overallTime;
-
-    int AT = 0;
-    while(AT<overallTime){
-        for(int i=0;i<numberOfProcesses;i++){
-            if(arrivalTime[i]<=AT){
-
+    int tempGanttChart[500][2];
+        for(int j=0;j<500;j++)
+            for(int k=0;k<2;k++)
+                tempGanttChart[j][k] = 0;        
+    
+    for(int i=0;i<numberOfProcesses;i++){
+        arr1[i] = burstTime[i];
+        totalTime+=burstTime[i];
+    }
+    
+    int time = 0;
+    int gi = 0;
+    for(int i=0;i<totalTime;i++){
+        int li = 0;
+        //putting the arrived things on an array
+        for(int j=0;j<numberOfProcesses;j++){
+            if(arrivalTime[j]<=i){
+                    arr[li][0] = arr1[j];
+                    arr[li][1] = j;
+                    li++;
             }
         }
-        AT++;
+        //orayt after ana kay ato i-sort sugod pinakagamay. idk if sort siya more like pangitaun lang ang pinakashortestjob omg pinaka niya shortest pa jud
+        int shortest[2][2];
+        for(int j=0;j<2;j++)
+            for(int k=0;k<2;k++)
+                shortest[j][k] = 0;
+
+        shortest[0][0] = 1000; //hax para sure jud ka naay mas gamay ba
+        for(int j=0;j<li;j++)
+            if(arr[j][0]<shortest[0][0] && arr[j][0]>0){
+                shortest[0][0] = arr[j][0];
+                shortest[0][1] = arr[j][1];
+            }
+
+        //after finding the shortest kay ibutang siya sa gantt chart niya anam2mon og minus sakto ba? not sure hehe  
+        tempGanttChart[gi][0] = i;
+        tempGanttChart[gi][1] = shortest[0][1]; //omg actually mao na ni siya ang gantt chart wala ni gana ganiha kay gamay ra ang indeces
+        gi++;
+        arr1[shortest[0][1]]--;
     }
+    for(int i=0;i<gi;i++)
+        cout << tempGanttChart[i][1] << " ";
+    cout << endl;
 }
+    
 
 void Class::Priority(){
     int arr[50] = {0};
@@ -295,5 +332,5 @@ void Class::RoundRobin(){
 }
 
 void Class::performProcesses(){
-    RoundRobin();
+    SRPT();
 }
